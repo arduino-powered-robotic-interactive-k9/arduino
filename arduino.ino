@@ -22,8 +22,66 @@ String voice = "";
 // servos
 Servo FRH, FRK, FLH, FLK, BRH, BRK, BLH, BLK;
 Servo head, neck, tail;
-
+const int pingPin = 2; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 3; // Echo Pin of Ultrasonic Sensor
 boolean t = false;
+
+void hey(){
+  
+   
+    alert();
+    delay(1000);
+    sit();
+    head2();
+    delay(2000);
+    tail2();
+    delay(3000);
+    tail2();
+    delay(4000);
+    tail2();
+    delay(4000);
+    handtailsensor();
+    delay(5000);
+    down();
+    delay(5000);
+    head2();
+    delay(2000);
+    sit();
+ 
+    
+}
+void tail2(){
+    for (int i = 0; i < 181; i++){
+    delay(4);
+    tail.write(i);
+    }
+  }
+
+void head2(){
+    for(int i = 0; i <4; i++)
+    {
+      head.write(15);
+      delay(150);
+      neck.write(50);
+      delay(150);
+      
+    }
+    
+    for(int i = 0; i <4; i++)
+    {
+      
+      head.write(55);
+      delay(150);
+      neck.write(130);
+      delay(150);
+    }
+      tail.write(120);
+      head.write(40);
+      neck.write(90);
+      delay(3000);
+    
+   
+}
 
 void straight() { //zerored values, can move either direction
   FRH.write(45); //if less than 45 then it goes back, if it is more than 45 it goes forward
@@ -76,6 +134,7 @@ void up() {
   delay(500);
   FRH.write(45);
   FLH.write(135);
+
 }
 
 void vow() {
@@ -148,6 +207,60 @@ void down() {
   FLH.write(170); //if less than 135 then it goes forward, if it is more than 135 it goes back
   FLK.write(160); //if less than 60 then it goes back, if it is more than 60 it goes forward
 }
+void handtailsensor()
+{
+long duration, inches, cm;
+   pinMode(pingPin, OUTPUT);
+   digitalWrite(pingPin, LOW);
+   delayMicroseconds(2);
+   digitalWrite(pingPin, HIGH);
+   delayMicroseconds(10);
+   digitalWrite(pingPin, LOW);
+   pinMode(echoPin, INPUT);
+   duration = pulseIn(echoPin, HIGH);
+   inches = microsecondsToInches(duration);
+   cm = microsecondsToCentimeters(duration);
+   
+     for(int i = 0; i <3; i++)
+    {
+      tail.write(120);
+      delay(150);
+      tail.write(120+i);
+      delay(150);
+      head.write(15);
+      delay(150);
+      neck.write(50);
+      delay(150);
+      
+    }
+    
+    for(int i = 0; i <2; i++)
+    {
+      tail.write(120-50);
+      delay(550);
+      tail.write(120+70);
+      delay(550);
+      head.write(55);
+      delay(150);
+      neck.write(130);
+      delay(150);
+    }
+      tail.write(120);
+   head.write(40);
+   neck.write(90);
+    delay(3000);
+    
+   }
+
+
+
+long microsecondsToInches(long microseconds) {
+   return microseconds / 74 / 2;
+}
+
+long microsecondsToCentimeters(long microseconds) {
+   return microseconds / 29 / 2;
+}
 
 
 void setup() {
@@ -161,6 +274,10 @@ void setup() {
   BLH.attach(BLH_pin);
   BLK.attach(BLK_pin);
 
+  neck.attach(neck_pin);
+  head.attach(head_pin);
+  tail.attach(tail_pin);
+  
   Serial.begin(9600);
 //  alert();
 //  delay(1000);
@@ -176,15 +293,20 @@ void setup() {
 //  delay(1000);
 //  straight();
 
-    alert();
-    delay(1000);
-    vow();
-    delay(1000);
-    alert();
-    delay(1000);
-    down();
-    delay(1000);
-    alert();
+//    alert();
+//    delay(1000);
+//    vow();
+//    delay(1000);
+//    alert();
+//    delay(1000);
+//    down();
+//    delay(1000);
+//    alert();
+
+hey();
+delay(500);
+handtailsensor();
+delay(500);
 }
 
 //white goes to 0
@@ -192,7 +314,7 @@ void setup() {
 
 
 void loop() {
-  
+  hey();
   while (Serial.available()) {
     delay(10);
     c = Serial.read();
