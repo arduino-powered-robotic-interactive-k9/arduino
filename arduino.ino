@@ -29,8 +29,6 @@ boolean t = false;
 //default state 
 void hey()
  {
-  delay(500);
-  
   if (checkBluetooth()) return;
   
   alert();
@@ -86,6 +84,8 @@ void hey()
   if (checkBluetooth()) return;
   
   head2();
+
+  delay(500);
  }
 
 void tail2()
@@ -264,60 +264,48 @@ void down()
 void handtailsensor()
 {
   long duration, inches, cm;
-  pinMode(pingPin, OUTPUT);
-  digitalWrite(pingPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(pingPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(pingPin, LOW);
-  pinMode(echoPin, INPUT);
-  duration = pulseIn(echoPin, HIGH);
-  inches = microsecondsToInches(duration);
-  cm = microsecondsToCentimeters(duration);
- 
- for(int i = 0; i <3; i++)
-  {
+   pinMode(pingPin, OUTPUT);
+   digitalWrite(pingPin, LOW);
+   delayMicroseconds(2);
+   digitalWrite(pingPin, HIGH);
+   delayMicroseconds(10);
+   digitalWrite(pingPin, LOW);
+   pinMode(echoPin, INPUT);
+   duration = pulseIn(echoPin, HIGH);
+   inches = microsecondsToInches(duration);
+   cm = microsecondsToCentimeters(duration);
+   if(inches < 6){
+     for(int i = 0; i <3; i++)
+    {
+      tail.write(120);
+      delay(150);
+      tail.write(120+70);
+      delay(150);
+      head.write(15);
+      delay(150);
+      neck.write(50);
+      delay(150);
+      
+    }
+    
+    for(int i = 0; i <3; i++)
+    {
+      tail.write(120-50);
+      delay(150);
+      tail.write(120+70);
+      delay(150);
+      head.write(55);
+      delay(150);
+      neck.write(130);
+      delay(150);
+    }
     tail.write(120);
-   
-    delay(150);
-   
-    tail.write(120+i);
-   
-    delay(150);
-   
-    head.write(15);
-   
-    delay(150);
-   
-    neck.write(50);
-   
-    delay(150);
-  }
-
-for(int i = 0; i <2; i++)
-  {
-    tail.write(120-50);
-  
-    delay(550);
-  
-    tail.write(120+70);
-  
-    delay(550);
-  
-    head.write(55);
-  
-    delay(150);
-  
-    neck.write(130);
-  
-    delay(150);
-  }
-
-   tail.write(120);
-   head.write(40);
-   neck.write(90);
-
-   delay(3000);
+    head.write(40);
+    neck.write(90);
+    delay(3000);
+    
+   }
+   delay(1000);
 }
 
 
@@ -349,10 +337,6 @@ void setup()
   tail.attach(tail_pin);
 
   Serial.begin(9600);
-
-  handtailsensor();
-
-  delay(500);
 }
 
 //[Reference for the bluetooth module]
@@ -375,6 +359,8 @@ boolean checkBluetooth() {
   }
 
   if (voice.length() > 0) {
+    Serial.println("voice: " + voice);
+    
     if (voice == "sit") {
       sit();
     } else if (voice == "up" || voice == "stand") {
